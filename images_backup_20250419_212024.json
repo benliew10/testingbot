@@ -1,0 +1,32 @@
+[
+  {
+    "image_id": "img_1745058312",
+    "number": 4,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICxGgDdFBFrqL-jAAB04QJqfl8YS3GeQACt8kxG-eXGFSPGHkJm44arQEAAwIAA3kAAzYE",
+    "status": "closed",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745058321",
+    "number": 3,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICq2gDc54PNQSbhJ61sUK_fzyo9TgjAAJZxDEbzAoZVIGpdbERKAIlAQADAgADeQADNgQ",
+    "status": "closed",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745062134",
+    "number": 3,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICq2gDc54PNQSbhJ61sUK_fzyo9TgjAAJZxDEbzAoZVIGpdbERKAIlAQADAgADeQADNgQ",
+    "status": "closed",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002648889060
+    }
+  }
+]

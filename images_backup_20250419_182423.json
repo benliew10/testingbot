@@ -1,0 +1,52 @@
+[
+  {
+    "image_id": "img_1745056838",
+    "number": 5,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICwmgDdEkMjhJfU8JlEP2ZdlVCSwL9AAKHyzEbWvEZVLaQB4hxkMIvAQADAgADeQADNgQ",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745056846",
+    "number": 4,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICxGgDdFBFrqL-jAAB04QJqfl8YS3GeQACt8kxG-eXGFSPGHkJm44arQEAAwIAA3kAAzYE",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745056851",
+    "number": 3,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAICq2gDc54PNQSbhJ61sUK_fzyo9TgjAAJZxDEbzAoZVIGpdbERKAIlAQADAgADeQADNgQ",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745056857",
+    "number": 2,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAIClmgDbue1PkSKtVPQI-OHLW9ivmFXAAKgyzEbWvEZVJgbhXE11ge7AQADAgADeQADNgQ",
+    "status": "closed",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  },
+  {
+    "image_id": "img_1745056862",
+    "number": 1,
+    "file_id": "AgACAgUAAxkBAAIDK2gDY0zv6Au8VgSMi2ZgK0SlMhcVAAL2wjEbNeogVFJWtfudTsN3AQADAgADeQADNgQ",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -1002265712981
+    }
+  }
+]

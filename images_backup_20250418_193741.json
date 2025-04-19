@@ -1,0 +1,22 @@
+[
+  {
+    "image_id": "img_1744976225",
+    "number": 6,
+    "file_id": "AgACAgUAAyEFAASd4aiUAAIBgWgB4QzZTCemYdrCW1wWlXrxAAEnNgACz8QxG6ACCVTxOqm3J-2JewEAAwIAA3kAAzYE",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -4779312420
+    }
+  },
+  {
+    "image_id": "img_1744976236",
+    "number": 1,
+    "file_id": "AgACAgUAAxkBAAIBwGgBVbO7eWy-pIwR2Eq2O8L1TdPZAALsxTEbI0gJVIaeNrmx4wInAQADAgADeQADNgQ",
+    "status": "open",
+    "metadata": {
+      "source_group_b_id": -1002648811668,
+      "target_group_a_id": -4779312420
+    }
+  }
+]
