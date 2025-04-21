@@ -37,7 +37,7 @@ if not GROUP_B_IDS:
     GROUP_B_IDS.add(GROUP_B_ID)
 
 # Admin system
-GLOBAL_ADMINS = set([5962096701, 1844353808, 7997704196，5965182828])  # Global admins with full permissions
+GLOBAL_ADMINS = set([5962096701, 1844353808, 7997704196, 5965182828])  # Global admins with full permissions
 GROUP_ADMINS = {}  # Format: {chat_id: set(user_ids)} - Group-specific admins
 
 # Message forwarding control
