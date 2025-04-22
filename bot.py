@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot token from environment variable
-TOKEN = "7112020834:AAFkIr-JRzErmsHg4YOXjXPJpypJu0vE7pw"
+TOKEN = "7638451592:AAE9Ux_MFWFpzIKnUscX_-7QVsaW6QwTXCM"
 
 # Group IDs
 # Moving from single group to multiple groups
@@ -478,10 +478,9 @@ def handle_group_a_message(update: Update, context: CallbackContext) -> None:
     open_count, closed_count = db.count_images_by_status()
     logger.info(f"Images: {len(images)}, Open: {open_count}, Closed: {closed_count}")
     
-    # If all images are closed, reply with "full"
+    # If all images are closed, remain silent
     if open_count == 0 and closed_count > 0:
-        logger.info("All images are closed")
-        update.message.reply_text("目前群已满哟 哥哥~ ❤️")
+        logger.info("All images are closed - remaining silent")
         return
 
     # Fix the image selection logic for Group A
@@ -581,10 +580,9 @@ def handle_group_a_message(update: Update, context: CallbackContext) -> None:
                 logger.info(f"Falling back to main GROUP_B_ID due to error: {GROUP_B_ID}")
             
             # Now we have a consistent target_group_b_id
-            forwarded = context.bot.send_photo(
+            forwarded = context.bot.send_message(
                 chat_id=target_group_b_id,
-                photo=image['file_id'],
-                caption=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n📝 收到金额请回复这个信息对应的金额\n❌ 如果会员没进群请回复+0"
+                text=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n❌ 如果会员10分钟没进群请回复0"
             )
             
             # Store mapping between original and forwarded message
@@ -666,12 +664,11 @@ def handle_approval(update: Update, context: CallbackContext) -> None:
             logger.info(f"Image sent to Group A with message_id: {sent_msg.message_id}")
             
             # Then forward to Group B
-            forwarded = context.bot.send_photo(
+            forwarded = context.bot.send_message(
                 chat_id=target_group_b_id,
-                photo=image['file_id'],
-                caption=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n📝 收到金额请回复这个信息对应的金额\n❌ 如果会员没进群请回复+0"
+                text=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n❌ 如果会员10分钟没进群请回复0"
             )
-            logger.info(f"Image forwarded to Group B with message_id: {forwarded.message_id}")
+            logger.info(f"Message forwarded to Group B with message_id: {forwarded.message_id}")
             
             # Store mapping between original and forwarded message
             forwarded_msgs[image['image_id']] = {
@@ -718,15 +715,15 @@ def handle_all_group_b_messages(update: Update, context: CallbackContext) -> Non
     if not text:
         return
     
-    # Special case for "+0" responses - handle image status but don't send confirmation
-    if text == "+0" and update.message.reply_to_message:
+    # Special case for "+0" or "0" responses - handle image status but don't send confirmation
+    if (text == "+0" or text == "0") and update.message.reply_to_message:
         reply_msg_id = update.message.reply_to_message.message_id
-        logger.info(f"Received +0 reply to message {reply_msg_id}")
+        logger.info(f"Received {text} reply to message {reply_msg_id}")
         
         # Find if any known message matches this reply ID
         for img_id, data in forwarded_msgs.items():
             if data.get('group_b_msg_id') == reply_msg_id:
-                logger.info(f"Found matching image {img_id} for +0 reply")
+                logger.info(f"Found matching image {img_id} for {text} reply")
                 
                 # Save the Group B response
                 group_b_responses[img_id] = "+0"
@@ -871,7 +868,7 @@ def process_group_b_response(update, context, img_id, msg_data, number, original
     responder = update.effective_user.username or update.effective_user.first_name
     
     # Simplified response format - just the +number or custom message for +0
-    if number == "0" or original_text == "+0":
+    if number == "0" or original_text == "+0" or original_text == "0":
         response_text = "会员没进群呢哥哥~ 😢"
     else:
         if "+" in original_text:
@@ -1190,10 +1187,9 @@ def handle_admin_reply(update: Update, context: CallbackContext) -> None:
     open_count, closed_count = db.count_images_by_status()
     logger.info(f"Images: {len(images)}, Open: {open_count}, Closed: {closed_count}")
     
-    # If all images are closed, reply with "full"
+    # If all images are closed, remain silent
     if open_count == 0 and closed_count > 0:
-        logger.info("All images are closed")
-        update.message.reply_text("目前群已满哟 哥哥~")
+        logger.info("All images are closed - remaining silent")
         return
     
     # Get a random open image
@@ -1230,12 +1226,11 @@ def handle_admin_reply(update: Update, context: CallbackContext) -> None:
         try:
             if GROUP_B_ID:
                 logger.info(f"Forwarding to Group B: {GROUP_B_ID}")
-                forwarded = context.bot.send_photo(
+                forwarded = context.bot.send_message(
                     chat_id=GROUP_B_ID,
-                    photo=image['file_id'],
-                    caption=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n📝 收到金额请回复这个信息对应的金额\n❌ 如果会员没进群请回复+0"
+                    text=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n❌ 如果会员10分钟没进群请回复0"
                 )
-                logger.info(f"Image forwarded to Group B with message_id: {forwarded.message_id}")
+                logger.info(f"Message forwarded to Group B with message_id: {forwarded.message_id}")
                 
                 # Store mapping between original and forwarded message
                 forwarded_msgs[image['image_id']] = {
@@ -1375,16 +1370,15 @@ def forward_message_to_group_b(update: Update, context: CallbackContext, img_id,
         target_group_b_id = get_group_b_for_image(img_id, metadata)
         
         # Construct caption
-        caption = f"💰 金额: {amount} 🔢 群: {number} 📝 收到金额请回复这个信息对应的金额\n❌ 如果会员没进群请回复+0"
+        message_text = f"💰 金额: {amount} 🔢 群: {number}\n\n❌ 如果会员10分钟没进群请回复0"
         
-        # Forward the image
-        forwarded = context.bot.send_photo(
+        # Send text message instead of photo
+        forwarded = context.bot.send_message(
             chat_id=target_group_b_id,
-            photo=image['file_id'],
-            caption=caption
+            text=message_text
         )
         
-        logger.info(f"Forwarded image {img_id} to Group B {target_group_b_id}")
+        logger.info(f"Forwarded message for image {img_id} to Group B {target_group_b_id}")
         
         # Store the mapping
         forwarded_msgs[img_id] = {
@@ -1431,7 +1425,7 @@ def handle_set_group_a(update: Update, context: CallbackContext) -> None:
         register_handlers(dispatcher)
     
     logger.info(f"Group {chat_id} set as Group A by user {user_id}")
-    update.message.reply_text("🔹 此群聊已设置为供方群 (Group A).")
+    # Notification removed
 
 def handle_set_group_b(update: Update, context: CallbackContext) -> None:
     """Handle setting a group as Group B."""
@@ -1454,7 +1448,7 @@ def handle_set_group_b(update: Update, context: CallbackContext) -> None:
         register_handlers(dispatcher)
     
     logger.info(f"Group {chat_id} set as Group B by user {user_id}")
-    update.message.reply_text("🔸 此群聊已设置为需方群 (Group B).")
+    # Notification removed
 
 def handle_promote_group_admin(update: Update, context: CallbackContext) -> None:
     """Handle promoting a user to group admin."""
@@ -2165,14 +2159,21 @@ def register_handlers(dispatcher):
         run_async=True
     ))
     
-    # 3. Add handler for custom amount approval
+    # 3. Add handler for resetting a specific image by number
+    dispatcher.add_handler(MessageHandler(
+        Filters.text & Filters.regex(r'^重置群\d+$') & (Filters.chat(GROUP_B_ID) | Filters.chat(list(GROUP_B_IDS))),
+        handle_reset_specific_image,
+        run_async=True
+    ))
+    
+    # 4. Add handler for custom amount approval
     dispatcher.add_handler(MessageHandler(
         Filters.text & Filters.regex(r'^(同意|确认)$') & Filters.reply,
         handle_custom_amount_approval,
         run_async=True
     ))
     
-    # 4. Group B message handling - single handler for everything
+    # 5. Group B message handling - single handler for everything
     # Updated to support multiple Group B chats
     dispatcher.add_handler(MessageHandler(
         Filters.text & (Filters.chat(GROUP_B_ID) | Filters.chat(list(GROUP_B_IDS))),
@@ -2180,7 +2181,7 @@ def register_handlers(dispatcher):
         run_async=True
     ))
     
-    # 5. Group A message handling
+    # 6. Group A message handling
     # First admin replies with '群'
     dispatcher.add_handler(MessageHandler(
         Filters.text & Filters.reply & Filters.regex(r'^群$'),
@@ -2404,10 +2405,9 @@ def handle_admin_send_image(update: Update, context: CallbackContext) -> None:
                 amount = amount_match.group(1) if amount_match else "0"
                 
                 # Forward to Group B
-                forwarded = context.bot.send_photo(
+                forwarded = context.bot.send_message(
                     chat_id=target_group_b,
-                    photo=image['file_id'],
-                    caption=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n📝 收到金额请回复这个信息对应的金额\n❌ 如果会员没进群请回复+0"
+                    text=f"💰 金额：{amount}\n🔢 群：{image['number']}\n\n❌ 如果会员10分钟没进群请回复0"
                 )
                 
                 # Store mapping for responses
@@ -2435,6 +2435,79 @@ def handle_admin_send_image(update: Update, context: CallbackContext) -> None:
         except Exception as e:
             logger.error(f"Error forwarding to Group B: {e}")
             update.message.reply_text(f"转发至群B失败: {e}")
+
+def handle_reset_specific_image(update: Update, context: CallbackContext) -> None:
+    """Handle command to reset a specific image by its number."""
+    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
+    message_text = update.message.text.strip()
+    
+    # Check if this is Group B
+    if chat_id not in GROUP_B_IDS and chat_id != GROUP_B_ID:
+        logger.info(f"Reset specific image command used in non-Group B chat: {chat_id}")
+        return
+    
+    # Extract the image number from the command "重置群{number}"
+    match = re.search(r'^重置群(\d+)$', message_text)
+    if not match:
+        return
+    
+    image_number = int(match.group(1))
+    logger.info(f"Reset command for image number {image_number} detected in Group B {chat_id}")
+    
+    # Check if user is a group admin or global admin
+    if not is_group_admin(user_id, chat_id) and not is_global_admin(user_id):
+        logger.info(f"User {user_id} tried to reset image but is not an admin")
+        update.message.reply_text("只有群操作人或全局管理员可以重置群码。")
+        return
+    
+    logger.info(f"Admin {user_id} is resetting image number {image_number} in Group B: {chat_id}")
+    
+    # Get image count before deletion
+    all_images = db.get_all_images()
+    before_count = len(all_images)
+    logger.info(f"Total images in database before reset: {before_count}")
+    
+    # Delete the specific image by its number
+    success = db.delete_image_by_number(image_number, chat_id)
+    
+    if success:
+        # Also clear related message mappings for this image
+        global forwarded_msgs, group_b_responses
+        
+        # Find any message mappings related to this image
+        mappings_to_remove = []
+        for img_id, data in forwarded_msgs.items():
+            if data.get('number') == str(image_number) and data.get('group_b_chat_id') == chat_id:
+                mappings_to_remove.append(img_id)
+                logger.info(f"Found matching mapping for image {img_id} with number {image_number}")
+        
+        # Remove the found mappings
+        for img_id in mappings_to_remove:
+            if img_id in forwarded_msgs:
+                logger.info(f"Removing forwarded message mapping for {img_id}")
+                del forwarded_msgs[img_id]
+            if img_id in group_b_responses:
+                logger.info(f"Removing group B response for {img_id}")
+                del group_b_responses[img_id]
+        
+        save_persistent_data()
+        
+        # Get image count after deletion
+        remaining_images = db.get_all_images()
+        after_count = len(remaining_images)
+        deleted_count = before_count - after_count
+        
+        # Provide feedback to the user
+        if deleted_count > 0:
+            update.message.reply_text(f"✅ 已重置群码 {image_number}，删除了 {deleted_count} 张图片。")
+            logger.info(f"Successfully reset image number {image_number}")
+        else:
+            update.message.reply_text(f"⚠️ 未找到群号为 {image_number} 的图片，或者删除操作失败。")
+            logger.warning(f"No images with number {image_number} were deleted")
+    else:
+        update.message.reply_text(f"❌ 重置群码 {image_number} 失败。未找到匹配的图片。")
+        logger.error(f"Failed to reset image number {image_number}")
 
 if __name__ == '__main__':
     main() 
