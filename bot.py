@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot token from environment variable
-TOKEN = "7112020834:AAFkIr-JRzErmsHg4YOXjXPJpypJu0vE7pw"
+TOKEN = ""
 
 # Group IDs
 # Moving from single group to multiple groups
